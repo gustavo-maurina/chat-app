@@ -1,2 +1,2 @@
-#h1 Chat app
+# Chat app
 Instruções no read me dentro de cada pasta
