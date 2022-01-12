@@ -1,66 +1,61 @@
 <script>
-  import {io} from 'socket.io-client'
-  import {onMount} from 'svelte'
+  import { io } from 'socket.io-client'
+  import { onMount } from 'svelte'
 
   let isChatting= false;
   let recipientId = undefined;
-  let currentMessage = ''
-  $: messages = []
-
+  let currentMessage = '';
   let socket = null;
   let hasConnected = false;
-  onMount(async ()=>{
-    if(!socket){
-      socket = io('http://localhost:8080', {query: {id: 2}})
+  $: messages = [];
 
+  onMount(async () => {
+    if(!socket) {
+      socket = io('http://localhost:8080', {query: {id: 2}});
       socket.on('connect', () => {
-        hasConnected=true
+        hasConnected = true;
       })
-      socket.on('receive-message',handleMessageReceived)
+      socket.on('receive-message', handleMessageReceived);
     } 
-
   })
 
-  function addMessage(text,type) {
-    messages.push({text,type})
-    messages = messages
+  function addMessage(text, type) {
+    messages.push({text,type});
+    messages = messages;
   }
-
 
   function handleMessageReceived(params) {
     console.log(params);
-    recipientId = params.senderId
-    isChatting = true
-    addMessage(params.text, 'received')
+    recipientId = params.senderId;
+    isChatting = true;
+    addMessage(params.text, 'received');
   }
 
   function submit(e) {
-    e.preventDefault()
-    socket.emit('send-message',{recipient: recipientId, text: currentMessage})
-    addMessage(currentMessage, 'sent')
-    currentMessage = ''
+    e.preventDefault();
+    socket.emit('send-message',{recipient: recipientId, text: currentMessage});
+    addMessage(currentMessage, 'sent');
+    currentMessage = '';
   }
 </script>
 
 
-{#if hasConnected} <p style="color: white;">Seu id: {socket.id}</p>{/if}
+{#if hasConnected}
+  <p style="color: white;">Seu id: {socket.id}</p>
+{/if}
 <div class={$$props.class}>
-  
-    <div class="messagesWrapper">
-      <ul>
-        
-        {#each messages as msg}
-          <li class={msg.type}>{msg.text}</li>
-        {/each}
-      </ul>
-    </div>
-  
-    <form on:submit={submit}>
-      <input bind:value={currentMessage} type="text" placeholder="Digite sua mensagem..." />
-      <button type="submit">Enviar</button>
-    </form>
-    
+  <div class="messagesWrapper">
+    <ul>
+      {#each messages as msg}
+        <li class={msg.type}>{msg.text}</li>
+      {/each}
+    </ul>
   </div>
+  <form on:submit={submit}>
+    <input bind:value={currentMessage} type="text" placeholder="Digite sua mensagem..." />
+    <button type="submit">Enviar</button>
+  </form>
+</div>
 
 <style>
   input {
@@ -72,6 +67,7 @@
     margin: 0;
     color: black;
   }
+
   button {
     position: absolute;
     bottom: 0;
@@ -92,7 +88,6 @@
     flex-direction: column;
     gap: 10px;
     padding:0;
-    
     list-style: none;
   }
 
@@ -103,9 +98,11 @@
     background-color: rgba(255, 255, 255, 0.774);
     width: fit-content;
   }
+
   .sent {
     align-self: end;
   }
+
   .messagesWrapper {
     max-height: 100%;
     overflow: hidden;
