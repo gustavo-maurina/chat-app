@@ -2,6 +2,8 @@
   import {io} from 'socket.io-client'
   import {onMount} from 'svelte'
 
+  let isChatting= false;
+  let recipientId = undefined;
   let currentMessage = ''
   $: messages = []
 
@@ -27,12 +29,14 @@
 
   function handleMessageReceived(params) {
     console.log(params);
+    recipientId = params.senderId
+    isChatting = true
     addMessage(params.text, 'received')
   }
 
   function submit(e) {
     e.preventDefault()
-    socket.emit('send-message',{recipient: 1, text: currentMessage})
+    socket.emit('send-message',{recipient: recipientId, text: currentMessage})
     addMessage(currentMessage, 'sent')
     currentMessage = ''
   }

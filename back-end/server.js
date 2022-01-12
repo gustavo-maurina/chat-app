@@ -29,6 +29,7 @@ io.on("connection", (socket) => {
     socket.broadcast.to(recipient).emit("receive-message", {
       recipients: [recipient],
       sender: id,
+      senderId: socket.id,
       text,
     });
   });
