@@ -24,6 +24,7 @@
   function addMessage(text, timeSent, type) {
     messages.push({ text, timeSent, type });
     messages = messages;
+    document.getElementById("serverMessages").scrollTop = 999;
   }
 
   function handleMessageReceived(params) {
@@ -35,6 +36,8 @@
 
   function submit(e) {
     e.preventDefault();
+    if (!currentMessage.replaceAll(" ", "")) return;
+
     const message = sendMessage(socket, {
       recipient: recipientId,
       text: currentMessage,
@@ -48,7 +51,7 @@
   <p style="color: white;">Seu id: {socket.id}</p>
 {/if}
 <div class={$$props.class}>
-  <div class="messagesWrapper">
+  <div class="messagesWrapper" id="serverMessages">
     <ul>
       {#each messages as msg}
         <li class={msg.type}>

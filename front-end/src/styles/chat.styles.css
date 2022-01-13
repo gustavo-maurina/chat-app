@@ -28,6 +28,7 @@ ul {
   flex-direction: column;
   gap: 10px;
   padding: 0;
+  padding-bottom: 50px;
   list-style: none;
 }
 
@@ -58,5 +59,15 @@ li {
 
 .messagesWrapper {
   max-height: 100%;
-  overflow: hidden;
+  overflow: auto;
+}
+
+.messagesWrapper::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #aaa; /* or add it to the track */
+}
+
+.messagesWrapper::-webkit-scrollbar-thumb {
+  background: rgb(32, 61, 37);
 }
