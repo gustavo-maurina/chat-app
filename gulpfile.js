@@ -1,5 +1,6 @@
 const { spawn } = require("child_process");
 
+// funcionando apenas com comandos NPM
 function createBackendShell(cb, command) {
   const backendShell = spawn(
     /^win/.test(process.platform) ? "npm.cmd" : "npm",
