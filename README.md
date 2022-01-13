@@ -2,7 +2,13 @@
 
 Instruções no read me dentro de cada pasta
 
-Instalar dependências de todo o projeto com:
+Para poder rodar os comandos do _gulp_ abaixo, instalar a CLI:
+
+```bash
+npm install --global gulp-cli
+```
+
+Para instalar dependências de todo o projeto com:
 
 ```bash
 gulp install-deps
