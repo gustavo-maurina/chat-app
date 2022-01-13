@@ -1,9 +1,9 @@
 const { spawn } = require("child_process");
 
-function createBackendShell(cb) {
+function createBackendShell(cb, command) {
   const backendShell = spawn(
     /^win/.test(process.platform) ? "npm.cmd" : "npm",
-    ["run", "dev"],
+    command,
     {
       cwd: __dirname + "\\back-end",
     }
@@ -21,14 +21,14 @@ function createBackendShell(cb) {
   });
 
   backendShell.on("close", (code) => {
-    cb(`child process exited with code ${code}`);
+    console.log(`child process exited with code ${code}`);
   });
 }
 
-function createFrontendShell(cb) {
+function createFrontendShell(cb, command) {
   const frontendShell = spawn(
     /^win/.test(process.platform) ? "npm.cmd" : "npm",
-    ["run", "dev"],
+    command,
     {
       cwd: __dirname + "\\front-end",
     }
@@ -46,7 +46,7 @@ function createFrontendShell(cb) {
   });
 
   frontendShell.on("close", (code) => {
-    cb(`child process exited with code ${code}`);
+    console.log(`child process exited with code ${code}`);
   });
 }
 /*
@@ -55,10 +55,17 @@ function createFrontendShell(cb) {
  dinâmico de acordo com OS
 */
 function runDev(cb) {
-  createBackendShell(cb);
-  createFrontendShell(cb);
+  createBackendShell(cb, ["run", "dev"]);
+  createFrontendShell(cb, ["run", "dev"]);
+}
+
+function installDeps(cb) {
+  createBackendShell(cb, ["install"]);
+  createFrontendShell(cb, ["install"]);
+  cb();
 }
 
 module.exports = {
   "run-dev": runDev,
+  "install-deps": installDeps,
 };
