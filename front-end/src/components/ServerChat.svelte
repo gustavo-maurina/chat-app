@@ -1,26 +1,26 @@
 <script>
-  import { io } from 'socket.io-client'
-  import { onMount } from 'svelte'
+  import { io } from "socket.io-client";
+  import { onMount } from "svelte";
 
-  let isChatting= false;
+  let isChatting = false;
   let recipientId = undefined;
-  let currentMessage = '';
+  let currentMessage = "";
   let socket = null;
   let hasConnected = false;
   $: messages = [];
 
   onMount(async () => {
-    if(!socket) {
-      socket = io('http://localhost:8080', {query: {id: 2}});
-      socket.on('connect', () => {
+    if (!socket) {
+      socket = io("http://localhost:8080", { query: { id: 2 } });
+      socket.on("connect", () => {
         hasConnected = true;
-      })
-      socket.on('receive-message', handleMessageReceived);
-    } 
-  })
+      });
+      socket.on("receive-message", handleMessageReceived);
+    }
+  });
 
   function addMessage(text, type) {
-    messages.push({text,type});
+    messages.push({ text, type });
     messages = messages;
   }
 
@@ -28,17 +28,19 @@
     console.log(params);
     recipientId = params.senderId;
     isChatting = true;
-    addMessage(params.text, 'received');
+    addMessage(params.text, "received");
   }
 
   function submit(e) {
     e.preventDefault();
-    socket.emit('send-message',{recipient: recipientId, text: currentMessage});
-    addMessage(currentMessage, 'sent');
-    currentMessage = '';
+    socket.emit("send-message", {
+      recipient: recipientId,
+      text: currentMessage,
+    });
+    addMessage(currentMessage, "sent");
+    currentMessage = "";
   }
 </script>
-
 
 {#if hasConnected}
   <p style="color: white;">Seu id: {socket.id}</p>
@@ -52,7 +54,11 @@
     </ul>
   </div>
   <form on:submit={submit}>
-    <input bind:value={currentMessage} type="text" placeholder="Digite sua mensagem..." />
+    <input
+      bind:value={currentMessage}
+      type="text"
+      placeholder="Digite sua mensagem..."
+    />
     <button type="submit">Enviar</button>
   </form>
 </div>
@@ -73,7 +79,7 @@
     bottom: 0;
     right: 0;
     height: 50px;
-    padding:0;
+    padding: 0;
     margin: 0;
     width: 80px;
     border: none;
@@ -87,7 +93,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding:0;
+    padding: 0;
     list-style: none;
   }
 
@@ -108,4 +114,3 @@
     overflow: hidden;
   }
 </style>
-
