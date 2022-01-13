@@ -28,7 +28,6 @@
   }
 
   function handleMessageReceived(params) {
-    console.log(params);
     recipientId = params.senderId;
     isChatting = true;
     addMessage(params.text, params.timeSent, "received");

@@ -26,7 +26,6 @@
   }
 
   function handleMessageReceived(params) {
-    console.log(params);
     addMessage(params.text, params.timeSent, "received");
   }
 
