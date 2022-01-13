@@ -25,12 +25,13 @@ io.on("connection", (socket) => {
   socket.join(id);
   console.log(id);
 
-  socket.on("send-message", ({ recipient, text }) => {
+  socket.on("send-message", ({ recipient, text, timeSent }) => {
     socket.broadcast.to(recipient).emit("receive-message", {
       recipients: [recipient],
       sender: id,
       senderId: socket.id,
       text,
+      timeSent,
     });
   });
 });

@@ -1,6 +1,8 @@
 <script>
   import { io } from "socket.io-client";
   import { onMount } from "svelte";
+  import { sendMessage } from "../helpers/sendMessage";
+  import "../styles/chat.styles.css";
 
   let isChatting = false;
   let recipientId = undefined;
@@ -19,8 +21,8 @@
     }
   });
 
-  function addMessage(text, type) {
-    messages.push({ text, type });
+  function addMessage(text, timeSent, type) {
+    messages.push({ text, timeSent, type });
     messages = messages;
   }
 
@@ -28,16 +30,16 @@
     console.log(params);
     recipientId = params.senderId;
     isChatting = true;
-    addMessage(params.text, "received");
+    addMessage(params.text, params.timeSent, "received");
   }
 
   function submit(e) {
     e.preventDefault();
-    socket.emit("send-message", {
+    const message = sendMessage(socket, {
       recipient: recipientId,
       text: currentMessage,
     });
-    addMessage(currentMessage, "sent");
+    addMessage(currentMessage, message.timeSent, "sent");
     currentMessage = "";
   }
 </script>
@@ -49,7 +51,10 @@
   <div class="messagesWrapper">
     <ul>
       {#each messages as msg}
-        <li class={msg.type}>{msg.text}</li>
+        <li class={msg.type}>
+          <div class="message">{msg.text}</div>
+          <div class="time">{msg.timeSent}</div>
+        </li>
       {/each}
     </ul>
   </div>
@@ -64,53 +69,4 @@
 </div>
 
 <style>
-  input {
-    width: 100%;
-    height: 50px;
-    position: absolute;
-    padding-left: 15px;
-    bottom: 0;
-    margin: 0;
-    color: black;
-  }
-
-  button {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    height: 50px;
-    padding: 0;
-    margin: 0;
-    width: 80px;
-    border: none;
-    background-color: rgb(31, 144, 69);
-    color: white;
-  }
-
-  ul {
-    max-height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 0;
-    list-style: none;
-  }
-
-  li {
-    margin: 0 10px;
-    padding: 5px 10px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.774);
-    width: fit-content;
-  }
-
-  .sent {
-    align-self: end;
-  }
-
-  .messagesWrapper {
-    max-height: 100%;
-    overflow: hidden;
-  }
 </style>
