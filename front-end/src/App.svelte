@@ -3,7 +3,7 @@
   import ServerChat from "./components/ServerChat.svelte";
 </script>
 
-<h1>Chat app!</h1>
+<h1> Chat app! </h1>
 <div id="chatWrapper">
   <div class="chatInnerWrapper">
     <h2>Cliente</h2>
